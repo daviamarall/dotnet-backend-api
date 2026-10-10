@@ -20,6 +20,7 @@ using (var scope = app.Services.CreateScope())
 
 app.MapOpenApi();
 app.MapHealthChecks("/healthz");
+app.MapHealthChecks("/readyz");
 
 app.MapGet("/", () => Results.Ok(new { service = "dotnet-backend-api", version = "1.0.0" }))
     .WithTags("Info")

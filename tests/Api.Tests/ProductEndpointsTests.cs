@@ -62,6 +62,15 @@ public class ProductEndpointsTests : IClassFixture<WebApplicationFactory<Program
     }
 
     [Fact]
+    public async Task Ready_returns_success()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/readyz");
+        response.EnsureSuccessStatusCode();
+    }
+
+    [Fact]
     public async Task Product_crud_lifecycle()
     {
         var client = _factory.CreateClient();

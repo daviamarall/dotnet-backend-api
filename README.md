@@ -66,6 +66,7 @@ dotnet test
 |--------|------------------|------------------------------|
 | GET    | `/`              | Metadados do serviço         |
 | GET    | `/healthz`       | Health check (inclui o banco)|
+| GET    | `/readyz`        | Readiness probe (Kubernetes) |
 | GET    | `/openapi/v1.json` | Especificação OpenAPI      |
 | GET    | `/products`      | Lista produtos               |
 | GET    | `/products/{id}` | Busca produto por id         |
@@ -81,12 +82,24 @@ curl -X POST http://localhost:8080/products \
   -d '{"name":"Keyboard","price":199.90,"stock":10}'
 ```
 
+## 📦 Imagem do container (GHCR)
+
+A CI publica automaticamente a imagem no **GitHub Container Registry** a cada push na `main`:
+
+```bash
+docker pull ghcr.io/daviamarall/dotnet-backend-api:latest
+docker run --rm -p 8080:8080 ghcr.io/daviamarall/dotnet-backend-api:latest
+```
+
+> 🔗 É essa imagem que o projeto **[k8s-lab](https://github.com/daviamarall/k8s-lab)** implanta no Kubernetes.
+
 ## 🧩 Pipeline (`ci.yml`)
 
-| Job          | O que faz                                  |
-|--------------|--------------------------------------------|
-| `build-test` | `dotnet restore` → `build` → `test`        |
-| `docker`     | Build da imagem (sem push)                 |
+| Job          | O que faz                                     |
+|--------------|-----------------------------------------------|
+| `build-test` | `dotnet restore` → `build` → `test`           |
+| `docker`     | Build da imagem (sem push)                    |
+| `push`       | Publica a imagem no GHCR (só em `main`, requer `packages: write`) |
 
 ## 🛠️ Stack
 
